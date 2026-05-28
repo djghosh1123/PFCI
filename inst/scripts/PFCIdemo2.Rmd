@@ -1,0 +1,148 @@
+---
+title: "PFCI demo with latent"
+date: "2026-02-27"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    theme: readable
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+library(PFCI)
+# sim <- sim <- PFCI::simulate_with_latent(
+#   p_obs = 100, gamma = 0.05, n = 100,
+#   edge_prob_obs = 0.02, latent_out_deg = 3,
+#   errDist = "normal",
+#   seed_graph = 1,
+#   seed_data  = 2
+# )
+# 
+# fit <- PFCI::pfci_fit(sim$X, alpha = 0.05, approx = TRUE)
+# 
+# met <- PFCI::metrics_with_latent(sim, fit)
+# met
+```
+
+```{r, include=TRUE}
+library(PFCI)
+
+sim <- PFCI::simulate_with_latent(
+  p_obs = 100, gamma = 0.05, n = 100,
+  edge_prob_obs = 0.02, latent_out_deg = 3,
+  errDist = "normal",
+  seed_graph = 123,
+  seed_data  = 234,
+  truth_mmax = 2,
+  truth_alpha = 0.9999
+)
+
+fit <- PFCI::pfci_fit(sim$X, alpha = 0.01, approx = TRUE)
+
+met <- PFCI::metrics_with_latent(sim, fit)
+met
+
+suppressPackageStartupMessages({
+  library(PFCI)
+  library(dplyr)
+})
+
+# ---- One replication for one errDist ----
+run_one_latent_rep <- function(
+  errDist,
+  rep_id,
+  p_obs = 100, gamma = 0.05, n = 100,
+  edge_prob_obs = 0.02, latent_out_deg = 3,
+  truth_mmax = 2, truth_alpha = 0.9999,
+  alpha_pfci = 0.01, approx = TRUE,
+  seed_graph = 123, seed_data0 = 234
+) {
+
+  sim <- PFCI::simulate_with_latent(
+    p_obs = p_obs, gamma = gamma, n = n,
+    edge_prob_obs = edge_prob_obs, latent_out_deg = latent_out_deg,
+    errDist = errDist,
+    seed_graph = seed_graph,
+    seed_data  = seed_data0 + rep_id,   # vary ONLY data seed across reps
+    truth_mmax = truth_mmax,
+    truth_alpha = truth_alpha
+  )
+
+  fit <- PFCI::pfci_fit(sim$X, alpha = alpha_pfci, approx = approx)
+
+  met <- PFCI::metrics_with_latent(sim, fit)
+
+  data.frame(
+    errDist = errDist,
+    rep = rep_id,
+    SHD = as.numeric(met$SHD),
+    F1_total = as.numeric(met$F1_total),
+    MCC = as.numeric(met$MCC),
+    Time = as.numeric(met$Time),
+    stringsAsFactors = FALSE
+  )
+}
+
+# ---- Batch runner across error distributions ----
+run_latent_replication_study <- function(
+  R = 20,
+  p_obs = 100, gamma = 0.05, n = 100,
+  edge_prob_obs = 0.02, latent_out_deg = 3,
+  truth_mmax = 2, truth_alpha = 0.9999,
+  alpha_pfci = 0.01, approx = TRUE,
+  seed_graph = 123, seed_data0 = 234
+) {
+
+  scenarios <- c(normal = "normal", t4 = "t4", mixt3 = "mixt3")
+
+  res <- do.call(rbind, lapply(unname(scenarios), function(ed) {
+    do.call(rbind, lapply(seq_len(R), function(r) {
+      run_one_latent_rep(
+        errDist = ed, rep_id = r,
+        p_obs = p_obs, gamma = gamma, n = n,
+        edge_prob_obs = edge_prob_obs, latent_out_deg = latent_out_deg,
+        truth_mmax = truth_mmax, truth_alpha = truth_alpha,
+        alpha_pfci = alpha_pfci, approx = approx,
+        seed_graph = seed_graph, seed_data0 = seed_data0
+      )
+    }))
+  }))
+
+  # Summary table: mean & sd for each metric
+  summ <- res %>%
+    group_by(errDist) %>%
+    summarise(
+      SHD.mean = mean(SHD, na.rm = TRUE),
+      SHD.sd   = sd(SHD, na.rm = TRUE),
+      F1_total.mean = mean(F1_total, na.rm = TRUE),
+      F1_total.sd   = sd(F1_total, na.rm = TRUE),
+      MCC.mean = mean(MCC, na.rm = TRUE),
+      MCC.sd   = sd(MCC, na.rm = TRUE),
+      Time.mean = mean(Time, na.rm = TRUE),
+      Time.sd   = sd(Time, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    arrange(match(errDist, c("normal","t4","mixt3")))
+
+  attr(summ, "raw") <- res
+  summ
+}
+
+# ---- Run exactly like your 3-line recipe, but replicated ----
+set.seed(1)
+tab <- run_latent_replication_study(
+  R = 100, p_obs = 100, gamma = 0.05, n = 100,
+  edge_prob_obs = 0.02, latent_out_deg = 3,
+  truth_mmax = 2, truth_alpha = 0.9999,
+  alpha_pfci = 0.01, approx = TRUE,
+  seed_graph = 123, seed_data0 = 234
+)
+
+print(tab)
+
+# # If you want the raw replicate-level results:
+# raw <- attr(tab, "raw")
+# head(raw)
+```

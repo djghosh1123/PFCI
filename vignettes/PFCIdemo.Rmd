@@ -1,0 +1,89 @@
+---
+title: "Getting Started with PFCI"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with PFCI}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Overview
+
+The `PFCI` package implements **Penalized Fast Causal Inference**, a two-stage
+procedure for learning causal structure in high-dimensional settings with
+potential latent variables and selection bias. The method combines graphical
+lasso screening with the FCI algorithm to produce a Partial Ancestral Graph
+(PAG) that is substantially faster than standard FCI/RFCI while maintaining
+accuracy under sparsity.
+
+## Installation
+
+`PFCI` is available on CRAN. It requires `pcalg` and `graph` from Bioconductor
+for its core functionality:
+
+```{r install, eval = FALSE}
+install.packages("PFCI")
+
+# Required Bioconductor dependencies
+install.packages("BiocManager")
+BiocManager::install(c("pcalg", "graph", "RBGL", "Rgraphviz"))
+```
+
+## Basic workflow
+
+The standard three-step workflow is simulate, fit, evaluate:
+
+```{r basic, eval = FALSE}
+library(PFCI)
+
+# Step 1: simulate a sparse DAG with p = 100 nodes
+sim <- simulate_pfci_toy(p = 100, n = 100, edge_prob = 0.02, seed = 1)
+
+# Step 2: fit PFCI
+fit <- pfci_fit(sim$X, alpha = 0.05)
+print(fit)
+
+# Step 3: evaluate against ground truth
+met <- pfci_metrics(sim, fit)
+met
+```
+
+The `print(fit)` call reports runtime and tuning parameters. 
+The `met` list contains SHD, F1, MCC, Precision, Recall, and Time.
+
+## Plotting the PAG
+
+```{r plot, eval = FALSE}
+plot_pag(fit)
+```
+
+## Latent confounders
+
+To simulate and evaluate under latent confounding use the
+`simulate_with_latent` and `metrics_with_latent` functions:
+
+```{r latent, eval = FALSE}
+sim_lat <- simulate_with_latent(p_obs = 100, gamma = 0.05, n = 100,
+                                seed_graph = 1, seed_data = 2)
+fit_lat <- pfci_fit(sim_lat$X, alpha = 0.05)
+metrics_with_latent(sim_lat, fit_lat)
+```
+
+## Scaling behaviour
+
+PFCI is approximately 3x faster than RFCI at `p = 1000` while maintaining
+equal or better F1 and MCC. See Table 1 of Pal, Ghosh, and Yang (2025) for
+full simulation results across `p = 100` to `p = 1000`.
+
+## Reference
+
+Pal, S., Ghosh, D., and Yang, S. (2025). Penalized FCI for Causal Structure
+Learning in a Sparse DAG for Biomarker Discovery in Parkinson's Disease.
+*Annals of Applied Statistics*. <doi:10.48550/arXiv.2507.00173>

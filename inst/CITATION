@@ -1,0 +1,14 @@
+bibentry(
+  bibtype  = "Article",
+  title    = "Penalized FCI for Causal Structure Learning in a Sparse DAG
+               for Biomarker Discovery in Parkinson's Disease",
+  author   = c(
+    person("Samhita", "Pal"),
+    person("Dhrubajyoti", "Ghosh"),
+    person("Shu", "Yang")
+  ),
+  journal  = "Annals of Applied Statistics",
+  year     = "2025",
+  doi      = "10.48550/arXiv.2507.00173",
+  note     = "Accepted"
+)

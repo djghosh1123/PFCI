@@ -1,0 +1,55 @@
+---
+title: "ReadMe"
+output: github_document
+date: "2026-03-14"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# PFCI: Penalized Fast Causal Inference for High-Dimensional Structure Learning
+
+PFCI implements **Penalized Fast Causal Inference (PFCI)**, a scalable two-stage procedure for learning graphical structures in high-dimensional settings with potential latent variables and selection bias.
+
+The method combines:
+
+- **Graphical lasso screening** to obtain a sparse super-skeleton  
+- **Constrained Fast Causal Inference (FCI)** for orientation and refinement  
+
+This enables computationally efficient structure learning while preserving theoretical guarantees under sparsity assumptions.
+
+---
+
+## 📦 Installation
+
+```{r eval =FALSE}
+```r
+# run this once
+install.packages("BiocManager")
+BiocManager::install(c("graph","RBGL","Rgraphviz","ggm","pcalg"))
+```
+
+Install the development version from GitHub:
+
+
+
+```{r eval=TRUE, message=FALSE, warning=FALSE}
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+# install.packages("devtools")
+devtools::install_github("SamhitaPal3/PFCI")
+
+library(PFCI)
+
+sim <- simulate_pfci_toy()
+fit <- pfci_fit(sim$X)
+met <- pfci_metrics(sim, fit)
+met
+
+plot_pag(fit)
+```
+
+
+
+# Reference
+Pal, S., Ghosh, D., & Yang, S. (2025). Penalized FCI for Causal Structure Learning in a Sparse DAG for Biomarker Discovery in Parkinson's Disease. arXiv preprint arXiv:2507.00173.
