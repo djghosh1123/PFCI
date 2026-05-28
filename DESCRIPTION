@@ -6,7 +6,9 @@ Authors@R: c(
     person("Samhita", "Pal", email = "spal4@ncsu.edu",
            role = c("aut"), comment = c(ORCID = "0009-0001-4930-916X")),
     person("Dhrubajyoti", "Ghosh", email = "dghosh3@kennesaw.edu",
-           role = c("aut", "cre"), comment = c(ORCID = "0000-0002-3360-3786"))
+           role = c("aut", "cre"), comment = c(ORCID = "0000-0002-3360-3786")),
+    person("Shu", "Yang", email = "syang24@ncsu.edu",
+           role = c("aut"), comment = c(ORCID = "0000-0001-7703-707X")),       
     )
 Description: Implements Penalized Fast Causal Inference (PFCI), a two-stage
     causal structure learning procedure for high-dimensional settings with
