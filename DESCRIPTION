@@ -8,7 +8,7 @@ Authors@R: c(
     person("Dhrubajyoti", "Ghosh", email = "dghosh3@kennesaw.edu",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0002-3360-3786")),
     person("Shu", "Yang", email = "syang24@ncsu.edu",
-           role = c("aut"), comment = c(ORCID = "0000-0001-7703-707X")),       
+           role = c("aut"), comment = c(ORCID = "0000-0001-7703-707X"))       
     )
 Description: Implements Penalized Fast Causal Inference (PFCI), a two-stage
     causal structure learning procedure for high-dimensional settings with
@@ -37,6 +37,8 @@ Suggests:
     Rgraphviz,
     testthat (>= 3.0.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    spelling
 VignetteBuilder: knitr
 Config/testthat/edition: 3
+Language: en-US
