@@ -4,9 +4,18 @@
 
 ## Test environments
 
-* Local: macOS [your version], R [your version]
-* R-hub: Windows Server, R-devel
-* R-hub: Ubuntu Linux, R-release
+* Local: Windows, R 4.4.2
+* GitHub Actions: windows-latest (R-release)
+* GitHub Actions: macOS-latest (R-release)
+* GitHub Actions: ubuntu-latest (R-devel, R-release, R-oldrel-1)
+* win-builder: R-release and R-devel
+
+## win-builder NOTE
+
+* 'New submission': expected for first CRAN submission.
+* 'Possibly misspelled words': FCI, PFCI, RFCI, and PAG are
+  standard causal inference acronyms. Ghosh is an author surname.
+  None are misspellings.
 
 ## Dependencies
 
@@ -19,6 +28,6 @@ provide clear installation instructions if they are not found.
 
 * This is the first submission of PFCI to CRAN.
 * All examples that call `pfci_fit()` are wrapped in `\donttest{}`
-  because they require Bioconductor packages that may not be present
-  on all check systems.
+  because they require Bioconductor packages that may not be
+  present on all check systems.
 * The vignette uses `eval=FALSE` throughout for the same reason.
