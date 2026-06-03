@@ -28,14 +28,6 @@ accuracy under sparsity.
 `PFCI` is available on CRAN. It requires `pcalg` and `graph` from Bioconductor
 for its core functionality:
 
-```{r install, eval = FALSE}
-install.packages("PFCI")
-
-# Required Bioconductor dependencies
-install.packages("BiocManager")
-BiocManager::install(c("pcalg", "graph", "RBGL", "Rgraphviz"))
-```
-
 ## Basic workflow
 
 The standard three-step workflow is simulate, fit, evaluate:

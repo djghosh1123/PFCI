@@ -22,9 +22,7 @@ plot_pag <- function(fit, ...) {
   if (!requireNamespace("pcalg", quietly = TRUE)) {
     stop(
       "Package 'pcalg' is required for plot_pag() but is not installed.\n",
-      "Install it with:\n",
-      "  install.packages('BiocManager')\n",
-      "  BiocManager::install('pcalg')",
+      "Please install 'pcalg' from Bioconductor.",
       call. = FALSE
     )
   }
@@ -32,9 +30,7 @@ plot_pag <- function(fit, ...) {
   if (!requireNamespace("Rgraphviz", quietly = TRUE)) {
     stop(
       "Package 'Rgraphviz' is required for plot_pag() but is not installed.\n",
-      "Install it with:\n",
-      "  install.packages('BiocManager')\n",
-      "  BiocManager::install('Rgraphviz')",
+      "Please install Rgraphviz from Bioconductor.",
       call. = FALSE
     )
   }

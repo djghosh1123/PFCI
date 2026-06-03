@@ -347,11 +347,6 @@ results <- run_sweep(
 summary_tab <- summarize_table(results)
 
 # Save outputs
-out_dir <- file.path(getwd(), "simulation_outputs")
-dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
-
+out_dir <- tempdir()
 write.csv(results, file.path(out_dir, "pfci_sim_results_long.csv"), row.names = FALSE)
 write.csv(summary_tab, file.path(out_dir, "pfci_sim_summary_table.csv"), row.names = FALSE)
-
-message("Wrote:\n  ", file.path(out_dir, "pfci_sim_results_long.csv"),
-        "\n  ", file.path(out_dir, "pfci_sim_summary_table.csv"))

@@ -6,19 +6,19 @@
 ## ================================
 ## Packages
 ## ================================
-suppressPackageStartupMessages({
-  if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-  # BiocManager::install("Rgraphviz") # only if you truly need it
-  if (!requireNamespace("graph", quietly = TRUE))  install.packages("graph")
-  if (!requireNamespace("glasso", quietly = TRUE)) install.packages("glasso")
-  if (!requireNamespace("pcalg", quietly = TRUE))  install.packages("pcalg")
-  if (!requireNamespace("igraph", quietly = TRUE)) install.packages("igraph")
-
-  library(graph)
-  library(glasso)
-  library(pcalg)
-  library(igraph)
-})
+# suppressPackageStartupMessages({
+#   if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+#   # BiocManager::install("Rgraphviz") # only if you truly need it
+#   if (!requireNamespace("graph", quietly = TRUE))  install.packages("graph")
+#   if (!requireNamespace("glasso", quietly = TRUE)) install.packages("glasso")
+#   if (!requireNamespace("pcalg", quietly = TRUE))  install.packages("pcalg")
+#   if (!requireNamespace("igraph", quietly = TRUE)) install.packages("igraph")
+#
+#   library(graph)
+#   library(glasso)
+#   library(pcalg)
+#   library(igraph)
+# })
 
 ## ================================
 ## DAG generator

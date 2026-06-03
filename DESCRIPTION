@@ -1,6 +1,6 @@
 Package: PFCI
 Title: Penalized Fast Causal Inference for High-Dimensional Structure Learning
-Version: 0.1.0
+Version: 0.1.1
 Date: 2026-05-28
 Authors@R: c(
     person("Samhita", "Pal", email = "spal4@ncsu.edu",

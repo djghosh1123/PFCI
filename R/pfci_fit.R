@@ -42,9 +42,7 @@ pfci_fit <- function(X, alpha = 0.05, rho = NULL, approx = TRUE,
   if (!requireNamespace("pcalg", quietly = TRUE)) {
     stop(
       "Package 'pcalg' is required for pfci_fit() but is not installed.\n",
-      "Install it with:\n",
-      "  install.packages('BiocManager')\n",
-      "  BiocManager::install('pcalg')",
+      " Please install pcalg from Bioconductor.",
       call. = FALSE
     )
   }

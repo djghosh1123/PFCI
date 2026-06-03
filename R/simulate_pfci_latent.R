@@ -53,9 +53,7 @@ simulate_with_latent <- function(
   if (!requireNamespace("pcalg", quietly = TRUE)) {
     stop(
       "Package 'pcalg' is required for simulate_with_latent() but is not installed.\n",
-      "Install it with:\n",
-      "  install.packages('BiocManager')\n",
-      "  BiocManager::install('pcalg')",
+      "Please install 'pcalg' from Bioconductor.",
       call. = FALSE
     )
   }

@@ -44,9 +44,7 @@ simulate_pfci_toy <- function(p = NULL,
   if (!requireNamespace("pcalg", quietly = TRUE)) {
     stop(
       "Package 'pcalg' is required for simulate_pfci_toy() but is not installed.\n",
-      "Install it with:\n",
-      "  install.packages('BiocManager')\n",
-      "  BiocManager::install('pcalg')",
+      "Please install 'pcalg' from Bioconductor.",
       call. = FALSE
     )
   }
@@ -54,9 +52,7 @@ simulate_pfci_toy <- function(p = NULL,
   if (!requireNamespace("graph", quietly = TRUE)) {
     stop(
       "Package 'graph' is required for simulate_pfci_toy() but is not installed.\n",
-      "Install it with:\n",
-      "  install.packages('BiocManager')\n",
-      "  BiocManager::install('graph')",
+      "Please install 'graph' from Bioconductor.",
       call. = FALSE
     )
   }

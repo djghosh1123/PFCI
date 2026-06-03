@@ -1,24 +1,24 @@
 ## ================================
 ## Packages
 ## ================================
-suppressPackageStartupMessages({
-  if (!requireNamespace("pcalg", quietly = TRUE)) install.packages("pcalg")
-  if (!requireNamespace("glasso", quietly = TRUE)) install.packages("glasso")
-  if (!requireNamespace("MASS", quietly = TRUE))   install.packages("MASS")
-  if (!requireNamespace("igraph", quietly = TRUE)) install.packages("igraph")
-  library(pcalg); library(glasso); library(MASS); library(igraph)
-})
-
-## Optional (GFCI):
-DO_GFCI <- TRUE
-if (DO_GFCI) {
-  if (!requireNamespace("rJava", quietly = TRUE)) install.packages("rJava")
-  if (!requireNamespace("rcausal", quietly = TRUE)) {
-    if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
-    remotes::install_github("bd2kccd/r-causal")
-  }
-  library(rJava); library(rcausal)
-}
+# suppressPackageStartupMessages({
+#   if (!requireNamespace("pcalg", quietly = TRUE)) install.packages("pcalg")
+#   if (!requireNamespace("glasso", quietly = TRUE)) install.packages("glasso")
+#   if (!requireNamespace("MASS", quietly = TRUE))   install.packages("MASS")
+#   if (!requireNamespace("igraph", quietly = TRUE)) install.packages("igraph")
+#   library(pcalg); library(glasso); library(MASS); library(igraph)
+# })
+#
+# ## Optional (GFCI):
+# DO_GFCI <- TRUE
+# if (DO_GFCI) {
+#   if (!requireNamespace("rJava", quietly = TRUE)) install.packages("rJava")
+#   if (!requireNamespace("rcausal", quietly = TRUE)) {
+#     if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
+#     remotes::install_github("bd2kccd/r-causal")
+#   }
+#   library(rJava); library(rcausal)
+# }
 
 ## ================================
 ## Utilities
@@ -155,17 +155,17 @@ simulate_once <- function(p_obs=200, p_lat=40, n=100,
   p_tot <- p_obs + p_lat
   obs_idx <- seq_len(p_obs)
   lat_idx <- (p_obs+1):p_tot
-  
+
   # Topological order is 1..p_tot ; we only add edges i->j for i<j
   A <- matrix(0L, p_tot, p_tot)
-  
+
   # (1) observed→observed edges
   # choose m edges from upper triangle among observed nodes
   up <- which(upper.tri(matrix(0,p_obs,p_obs)), arr.ind = TRUE)
   m  <- min(nrow(up), edge_ratio * p_tot)
   sel <- up[sample.int(nrow(up), m, replace = FALSE), , drop=FALSE]
   for (k in seq_len(nrow(sel))) A[sel[k,1], sel[k,2]] <- 1L
-  
+
   # (2) latent→observed edges: each latent picks Poisson(latent_out_deg) children uniformly in observed
   for (L in lat_idx) {
     d <- rpois(1, lambda = latent_out_deg)
@@ -174,7 +174,7 @@ simulate_once <- function(p_obs=200, p_lat=40, n=100,
       A[L, kids] <- 1L
     }
   }
-  
+
   # Edge weights and Gaussian simulation in topo order
   W <- matrix(0, p_tot, p_tot)
   W[A==1L] <- rnorm(sum(A), mean=0, sd=0.8)
@@ -186,19 +186,19 @@ simulate_once <- function(p_obs=200, p_lat=40, n=100,
     mu <- if (length(pa)) X[,pa,drop=FALSE] %*% W[pa,j] else 0
     X[,j] <- mu + rnorm(n, 0, eps_sd[j])
   }
-  
+
   colnames(X) <- paste0("X", 1:p_tot)
-  
+
   # Build "true PAG" amat.pag over ALL nodes first, then we’ll slice to observed later
   # Start as no edges
   amat_true <- matrix(0L, p_tot, p_tot)
-  
+
   # observed directed edges kept as arrows
   for (i in obs_idx) for (j in obs_idx) if (A[i,j]==1L) {
     amat_true[i,j] <- 2L  # arrowhead at j
     amat_true[j,i] <- 3L  # tail at i
   }
-  
+
   # bidirected among observed if they share at least one latent parent
   for (i in obs_idx) for (j in obs_idx) if (i<j) {
     # check if any latent L with A[L,i]==1 & A[L,j]==1
@@ -208,7 +208,7 @@ simulate_once <- function(p_obs=200, p_lat=40, n=100,
       amat_true[j,i] <- 2L
     }
   }
-  
+
   # Data returned: observed variables only
   list(
     X_obs = X[, obs_idx, drop=FALSE],
@@ -245,12 +245,12 @@ run_pfci <- function(X, rho = NULL) {
   adj_sym <- (adj | t(adj))
   fixedGaps <- !adj_sym  # forbid edges not in glasso adjacency (symmetric)
   suff <- list(C = cor(X), n = nrow(X))
-  
+
   # gate indepTest: if glasso says no edge, return p=1 quickly; else do gaussCItest
   gate <- function(x, y, Sset, suffStat) {
     if (!adj_sym[x,y]) return(1) else return(gaussCItest(x,y,Sset,suffStat))
   }
-  
+
   fit <- pcalg::fci(suffStat = suff, indepTest = gate, alpha = 0.05,
                     labels = colnames(X), fixedGaps = fixedGaps,
                     skel.method = "stable", doPdsep = FALSE)
@@ -278,7 +278,7 @@ run_gfci <- function(X) {
 run_one <- function(p_obs=200, gamma=0.05, n=100, edge_ratio = 1L,
                     latent_out_deg = 3L, seed=1L,
                     do_gfci = DO_GFCI) {
-  
+
   p_lat <- round(gamma * p_obs)
   sim <- simulate_once(p_obs=p_obs, p_lat=p_lat, n=n,
                        edge_ratio=edge_ratio, latent_out_deg=latent_out_deg,
@@ -286,35 +286,35 @@ run_one <- function(p_obs=200, gamma=0.05, n=100, edge_ratio = 1L,
   X   <- sim$X_obs
   tru <- sim$amat_true_full
   obs <- sim$obs_idx
-  
+
   # truth restricted to observed block
   true_amat_obs <- tru[obs, obs]
-  
+
   # RFCI
   rfci <- run_rfci(X)
   # PFCI
   pfci <- run_pfci(X)
   # GFCI (optional)
   gfci <- if (do_gfci) run_gfci(X) else NULL
-  
+
   # Metrics
   sk_rfci <- skeleton_f1(true_amat_obs, rfci$amat, obs)
   sk_pfci <- skeleton_f1(true_amat_obs, pfci$amat, obs)
   sk_gfci <- if (!is.null(gfci)) skeleton_f1(true_amat_obs, gfci$amat, obs) else c(precision=NA, recall=NA, f1=NA)
-  
+
   et_rfci <- edge_type_metrics(true_amat_obs, rfci$amat, obs)
   et_pfci <- edge_type_metrics(true_amat_obs, pfci$amat, obs)
   et_gfci <- if (!is.null(gfci)) edge_type_metrics(true_amat_obs, gfci$amat, obs) else NULL
-  
+
   at_rfci <- arrow_tail_metrics(true_amat_obs, rfci$amat, obs)
   at_pfci <- arrow_tail_metrics(true_amat_obs, pfci$amat, obs)
   at_gfci <- if (!is.null(gfci)) arrow_tail_metrics(true_amat_obs, gfci$amat, obs) else NULL
-  
+
   out_row <- list(
     p_obs = p_obs,
     gamma = gamma,
     edge_ratio = edge_ratio,
-    
+
     RFCI = list(
       F1_skel = unname(sk_rfci["f1"]),
       F1_dir  = et_rfci$dir["f1"],

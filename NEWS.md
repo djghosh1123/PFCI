@@ -1,3 +1,10 @@
+# PFCI 0.1.1
+
+* Removed `install.packages()` calls from `inst/scripts/` files
+  to comply with CRAN policies.
+* Fixed writing path in `inst/scripts/run_simulations_full.R`
+  to use `tempdir()` instead of `getwd()`.
+
 # PFCI 0.1.0
 
 * Initial CRAN submission.
