@@ -10,23 +10,28 @@
 * GitHub Actions: ubuntu-latest (R-devel, R-release, R-oldrel-1)
 * win-builder: R-release and R-devel
 
+## Resubmission notes (0.1.0 -> 0.1.1)
+
+* Commented out `install.packages()` calls in `inst/scripts/` files
+  to comply with CRAN policies.
+* Replaced `getwd()` with `tempdir()` in `inst/scripts/run_simulations_full.R`.
+
 ## win-builder NOTE
 
-* 'New submission': expected for first CRAN submission.
-* 'Possibly misspelled words': FCI, PFCI, RFCI, and PAG are
+* `'New submission'`: expected.
+* `'Possibly misspelled words'`: FCI, PFCI, RFCI, and PAG are
   standard causal inference acronyms. Ghosh is an author surname.
   None are misspellings.
 
 ## Dependencies
 
 This package uses `pcalg`, `graph`, `RBGL`, and `Rgraphviz` from
-Bioconductor, listed under Suggests (not Imports). Functions that
+Bioconductor, listed under `Suggests` (not `Imports`). Functions that
 require these packages check for their availability at runtime and
 provide clear installation instructions if they are not found.
 
 ## Submission notes
 
-* This is the first submission of PFCI to CRAN.
 * All examples that call `pfci_fit()` are wrapped in `\donttest{}`
   because they require Bioconductor packages that may not be
   present on all check systems.
