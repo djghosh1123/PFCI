@@ -10,5 +10,19 @@ bibentry(
   journal  = "Annals of Applied Statistics",
   year     = "2025",
   doi      = "10.48550/arXiv.2507.00173",
-  note     = "Accepted"
+  note     = "Accepted for publication"
+)
+
+bibentry(
+  bibtype  = "Manual",
+  title    = "{PFCI}: Penalized Fast Causal Inference for High-Dimensional
+               Structure Learning",
+  author   = c(
+    person("Samhita", "Pal"),
+    person("Dhrubajyoti", "Ghosh"),
+    person("Shu", "Yang")
+  ),
+  year     = "2026",
+  note     = "R package version 0.1.1",
+  url      = "https://CRAN.R-project.org/package=PFCI"
 )
